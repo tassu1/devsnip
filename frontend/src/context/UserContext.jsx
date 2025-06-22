@@ -10,31 +10,27 @@ const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchUser = async () => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      setLoading(false);
-      return;
-    }
+  // In UserContext.jsx
+const fetchUser = async () => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    setUser(null);
+    return null;
+  }
 
-    try {
-      const { data } = await api.get('/auth/user', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      setUser(data);
-    } catch (err) {
-      console.error('Failed to fetch user:', err);
-      if (err.response?.status === 401) {
-        localStorage.removeItem('token');
-        toast.error('Session expired. Please login again.');
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
+  try {
+    const { data } = await api.get('/auth/user');
+    const userData = data?.user || data;
+    if (!userData?.id) throw new Error('User ID missing in response');
+    setUser(userData);
+    return userData;
+  } catch (err) {
+    console.error('User fetch error:', err);
+    localStorage.removeItem('token');
+    setUser(null);
+    return null;
+  }
+};
 
   const login = async (credentials) => {
     try {

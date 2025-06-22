@@ -13,9 +13,9 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { user, logout } = useContext(UserContext);
+  const { user, fetchUser } = useContext(UserContext);
   
-  // State management (preserving original design)
+  // State management
   const [darkMode, setDarkMode] = useState(() => {
     const savedMode = localStorage.getItem('darkMode');
     return savedMode === 'true' || 
@@ -28,31 +28,23 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
 
-  // Set dark mode (original implementation)
+  // Set dark mode
   useEffect(() => {
     document.documentElement.classList.toggle('dark', darkMode);
   }, [darkMode]);
 
-  // Enhanced fetchSnippets with proper error handling
+  // Fetch snippets
   const fetchSnippets = async () => {
     setIsLoading(true);
     try {
-      const token = localStorage.getItem('token');
-      if (!token) throw new Error('No authentication token found');
-
-      const { data } = await api.get('/snippets', {
-        headers: { 
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      const { data } = await api.get('/snippets');
       setSnippets(data);
     } catch (err) {
-      console.error('Fetch snippets error:', err);
+      console.error('Fetch error:', err);
       if (err.response?.status === 401) {
-        logout();
-        toast.error('Session expired. Please login again.');
+        localStorage.removeItem('token');
         navigate('/login');
+        toast.error('Session expired. Please login again.');
       } else {
         toast.error(err.response?.data?.msg || 'Failed to load snippets');
       }
@@ -61,18 +53,26 @@ const Dashboard = () => {
     }
   };
 
-  // Check auth and fetch snippets on mount
+  // Initial data load
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      toast.error('Please login first');
-      navigate('/login');
-    } else {
-      fetchSnippets();
-    }
-  }, [navigate]);
+    const initialize = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        navigate('/login');
+        return;
+      }
 
-  // Filter snippets (original implementation)
+      try {
+        await fetchUser(); // Ensure user data is loaded
+        await fetchSnippets();
+      } catch (err) {
+        console.error('Initialization error:', err);
+      }
+    };
+    initialize();
+  }, [navigate, fetchUser]);
+
+  // Filter snippets
   useEffect(() => {
     let results = snippets;
     
@@ -92,72 +92,57 @@ const Dashboard = () => {
     setFilteredSnippets(results);
   }, [searchQuery, selectedLanguage, snippets]);
 
-  // Fixed handleCreate with proper auth check
+  // Create snippet
   const handleCreate = async (newSnippet) => {
     try {
-      const token = localStorage.getItem('token');
-      if (!token || !user?.id) {
-        throw new Error('Please login to create snippets');
+      if (!user?.id) {
+        throw new Error('User information not available');
       }
 
       const { data } = await api.post('/snippets', {
         ...newSnippet,
         user: user.id
-      }, {
-        headers: { 
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
       });
       
       setSnippets([data, ...snippets]);
       setShowModal(false);
       toast.success('Snippet created successfully!');
     } catch (err) {
-      console.error('Create snippet error:', err);
+      console.error('Create error:', err);
       if (err.response?.status === 401) {
-        logout();
-        toast.error('Session expired. Please login again.');
+        localStorage.removeItem('token');
         navigate('/login');
+        toast.error('Session expired. Please login again.');
       } else {
-        toast.error(err.message || err.response?.data?.msg || 'Failed to create snippet');
+        toast.error(err.message || 'Failed to create snippet');
       }
     }
   };
 
-  // Delete snippet (original implementation with auth check)
+  // Delete snippet
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this snippet?')) return;
     
     try {
-      const token = localStorage.getItem('token');
-      if (!token) throw new Error('Authentication required');
-
-      await api.delete(`/snippets/${id}`, {
-        headers: { 
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      await api.delete(`/snippets/${id}`);
       setSnippets(snippets.filter(snippet => snippet._id !== id));
       toast.success('Snippet deleted successfully!');
     } catch (err) {
-      console.error('Delete snippet error:', err);
+      console.error('Delete error:', err);
       if (err.response?.status === 401) {
-        logout();
-        toast.error('Session expired. Please login again.');
+        localStorage.removeItem('token');
         navigate('/login');
+        toast.error('Session expired. Please login again.');
       } else {
         toast.error(err.response?.data?.msg || 'Failed to delete snippet');
       }
     }
   };
 
-  // Get languages (original implementation)
+  // Get unique languages
   const snippetLanguages = [...new Set(snippets.map(s => s.language).filter(Boolean))];
   const languages = ['All', ...snippetLanguages].sort();
 
-  // Preserving original JSX structure
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
       <Navbar 
@@ -171,7 +156,6 @@ const Dashboard = () => {
       />
 
       <main className="container mx-auto px-4 sm:px-6 py-8 md:py-12 lg:py-16 max-w-7xl">
-        {/* Header - original structure */}
         <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
@@ -183,20 +167,26 @@ const Dashboard = () => {
           </div>
 
           <button
-            onClick={() => setShowModal(true)}
+            onClick={() => {
+              if (user?.id) {
+                setShowModal(true);
+              } else {
+                toast.error('Please wait while we verify your session...');
+              }
+            }}
             className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
           >
             ＋ New Snippet
           </button>
         </div>
 
-        {/* Filters - original structure */}
         <div className="flex flex-col sm:flex-row gap-4 mb-8">
           <SearchBar 
             value={searchQuery}
             onChange={setSearchQuery}
             placeholder="Search snippets..."
           />
+          
           <LanguageFilter
             languages={languages}
             selected={selectedLanguage}
@@ -204,7 +194,6 @@ const Dashboard = () => {
           />
         </div>
 
-        {/* Content - original structure */}
         {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(6)].map((_, i) => (
@@ -235,7 +224,7 @@ const Dashboard = () => {
                 : "No snippets yet"}
             </h3>
             <button
-              onClick={() => setShowModal(true)}
+              onClick={() => user?.id ? setShowModal(true) : toast.error('Please login to create snippets')}
               className="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition-colors"
             >
               Create First Snippet
