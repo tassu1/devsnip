@@ -24,15 +24,26 @@ const Login = () => {
   const toggleDarkMode = () => setDarkMode(!darkMode);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const { data } = await api.post('/auth/login', { email, password });
-      localStorage.setItem('token', data.token);
-      navigate('/dashboard');
-    } catch (err) {
-      setError(err.response?.data?.msg || 'Login failed');
+  e.preventDefault();
+  try {
+    const { data } = await api.post('/auth/login', { email, password });
+    
+    // Store both token and user data
+    localStorage.setItem('token', data.token);
+    localStorage.setItem('userId', data.user?._id || data.userId);
+    
+    // Optional: Store basic user info if available
+    if (data.user) {
+      localStorage.setItem('userName', data.user.name);
     }
-  };
+    
+    navigate('/dashboard');
+  } catch (err) {
+    setError(err.response?.data?.msg || 'Login failed');
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+  }
+};
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">

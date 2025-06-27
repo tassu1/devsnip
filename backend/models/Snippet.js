@@ -28,4 +28,8 @@ const SnippetSchema = new mongoose.Schema({
   },
 });
 
+
+SnippetSchema.index({ user: 1 }); 
+SnippetSchema.index({ createdAt: -1 });
+
 module.exports = mongoose.model('Snippet', SnippetSchema);

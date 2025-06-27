@@ -1,10 +1,8 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-// 1. Define your API base URL directly
-const API_BASE_URL = 'http://localhost:5000/api'; // Replace with your actual backend URL
+const API_BASE_URL = 'http://localhost:5000/api';
 
-// 2. Create axios instance
 const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000,
@@ -30,20 +28,23 @@ api.interceptors.request.use(config => {
 api.interceptors.response.use(
   response => response,
   error => {
-    // Skip auth-related errors from interceptor
-    if (error.config.url.includes('/auth')) {
+    const originalRequest = error.config;
+    
+    // Skip handling for auth endpoints
+    if (originalRequest.url.includes('/auth')) {
       return Promise.reject(error);
     }
     
-    if (error.response?.status === 401) {
+    // Handle 401 errors
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      // Only show message and redirect if there was a token (meaning user was previously authenticated)
       if (localStorage.getItem('token')) {
         toast.error('Session expired. Please login again.');
-      }
-      localStorage.removeItem('token');
-      
-      // Use window.location instead of navigate for complete state reset
-      if (!window.location.pathname.includes('/login')) {
-        window.location.href = '/login?session_expired=true';
+        localStorage.removeItem('token');
+        
+        if (!window.location.pathname.includes('/login')) {
+          window.location.href = '/login?session_expired=true';
+        }
       }
     }
     

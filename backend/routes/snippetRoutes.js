@@ -5,14 +5,54 @@ const { check, validationResult } = require('express-validator');
 const Snippet = require('../models/Snippet');
 
 // @route   GET api/snippets
-// @desc    Get all user snippets
 router.get('/', auth, async (req, res) => {
   try {
-    const snippets = await Snippet.find({ user: req.user.id }).sort({ createdAt: -1 });
-    res.json(snippets);
+    const snippets = await Snippet.find({ user: req.user.id })
+      .select('-code') // Explicitly exclude code
+      .sort({ createdAt: -1 })
+      .lean();
+
+    res.json({
+      success: true,
+      count: snippets.length,
+      data: snippets
+    });
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server error');
+    res.status(500).json({ 
+      success: false,
+      error: 'Server error' 
+    });
+  }
+});
+
+// Add new route for single snippet with code
+router.get('/:id/code', auth, async (req, res) => {
+  try {
+    const snippet = await Snippet.findOne({
+      _id: req.params.id,
+      user: req.user.id // Security: verify ownership
+    }).select('code');
+
+    if (!snippet) {
+      return res.status(404).json({
+        success: false,
+        error: 'Snippet not found'
+      });
+    }
+
+    res.json({
+      success: true,
+      data: {
+        code: snippet.code
+      }
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ 
+      success: false,
+      error: 'Server error' 
+    });
   }
 });
 
