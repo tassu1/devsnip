@@ -3,6 +3,7 @@ const router = express.Router();
 const auth = require('../middlewares/auth');
 const { check, validationResult } = require('express-validator');
 const Snippet = require('../models/Snippet');
+const mongoose = require('mongoose');
 
 // @route   GET api/snippets
 router.get('/', auth, async (req, res) => {
@@ -135,23 +136,57 @@ router.put('/:id', auth, async (req, res) => {
 // @desc    Delete snippet
 router.delete('/:id', auth, async (req, res) => {
   try {
+    // Validate ID format first
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid snippet ID format'
+      });
+    }
+
     const snippet = await Snippet.findById(req.params.id);
 
     if (!snippet) {
-      return res.status(404).json({ msg: 'Snippet not found' });
+      return res.status(404).json({
+        success: false,
+        error: 'Snippet not found'
+      });
     }
 
     // Make sure user owns snippet
     if (snippet.user.toString() !== req.user.id) {
-      return res.status(401).json({ msg: 'Not authorized' });
+      return res.status(403).json({  // 403 Forbidden is more appropriate
+        success: false,
+        error: 'Not authorized to delete this snippet'
+      });
     }
 
-    await Snippet.findByIdAndRemove(req.params.id);
-    res.json({ msg: 'Snippet removed' });
+    await snippet.deleteOne();  // Preferred over findByIdAndRemove
+    
+    res.json({
+      success: true,
+      message: 'Snippet deleted successfully',
+      data: {
+        id: req.params.id
+      }
+    });
+    
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
+    console.error('DELETE Error:', err.message);
+    
+    // More specific error handling
+    if (err.name === 'CastError') {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid ID format'
+      });
+    }
+    
+    res.status(500).json({
+      success: false,
+      error: 'Server error',
+      details: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
   }
 });
-
 module.exports = router;

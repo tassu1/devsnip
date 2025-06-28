@@ -169,8 +169,14 @@ const Dashboard = () => {
 
   // Get unique languages for filter
   const snippetLanguages = [...new Set(snippets.map(s => s.language).filter(Boolean))];
-  const languages = ['All', ...snippetLanguages].sort();
-
+const languages = [
+  { value: 'All', label: 'All Languages', id: 'all' },
+  ...snippetLanguages.map(lang => ({ 
+    value: lang, 
+    label: lang, 
+    id: `${lang}-${Math.random().toString(36).substr(2, 9)}` 
+  }))
+].sort((a, b) => a.value.localeCompare(b.value));
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
       <Navbar 
