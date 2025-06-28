@@ -1,11 +1,21 @@
-// src/App.jsx
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useContext } from 'react';
-import { AuthProvider, AuthContext } from './context/AuthContext'; 
+import { AuthProvider, AuthContext } from './context/AuthContext';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
+
+const ProtectedRoute = ({ children }) => {
+  const { isAuthenticated } = useContext(AuthContext);
+  
+  // Handle loading state
+  if (isAuthenticated === null) {
+    return <div className="flex justify-center items-center h-screen">Loading...</div>;
+  }
+
+  return isAuthenticated ? children : <Navigate to="/login" replace />;
+};
 
 function App() {
   return (
@@ -23,17 +33,10 @@ function App() {
               </ProtectedRoute>
             } 
           />
-          {/* Add other routes as needed */}
         </Routes>
       </Router>
     </AuthProvider>
   );
 }
-
-// Create this component in the same file or a separate one
-const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated } = useContext(AuthContext);
-  return isAuthenticated ? children : <Navigate to="/login" replace />;
-};
 
 export default App;

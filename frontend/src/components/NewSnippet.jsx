@@ -2,11 +2,27 @@ import { useState, useEffect, useMemo } from 'react';
 import { defaultLanguages } from '../utils/languages';
 
 const NewSnippetModal = ({ isOpen, onClose, onSubmit, languages = [] }) => {
-  // Memoize the combined languages to prevent unnecessary recalculations
-  const allLanguages = useMemo(() => 
-    [...new Set([...defaultLanguages, ...languages])].sort(),
-    [languages] // Only recalculate when languages prop changes
-  );
+  // Normalize all languages to object format for consistent handling
+  const allLanguages = useMemo(() => {
+    // Convert all languages to object format if they aren't already
+    const normalizedLangs = [...defaultLanguages, ...languages].map(lang => 
+      typeof lang === 'object' ? lang : { value: lang, label: lang }
+    );
+    
+    // Remove duplicates by value
+    const uniqueLangs = [];
+    const seenValues = new Set();
+    
+    for (const lang of normalizedLangs) {
+      if (!seenValues.has(lang.value)) {
+        seenValues.add(lang.value);
+        uniqueLangs.push(lang);
+      }
+    }
+    
+    // Sort alphabetically by label
+    return uniqueLangs.sort((a, b) => a.label.localeCompare(b.label));
+  }, [languages]);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -15,13 +31,15 @@ const NewSnippetModal = ({ isOpen, onClose, onSubmit, languages = [] }) => {
     tags: ''
   });
 
-  // Initialize language only once when component mounts
+  // Set initial language when component mounts or languages change
   useEffect(() => {
-    setFormData(prev => ({
-      ...prev,
-      language: allLanguages[0] || ''
-    }));
-  }, [allLanguages]); // Only run when allLanguages changes
+    if (allLanguages.length > 0 && !formData.language) {
+      setFormData(prev => ({
+        ...prev,
+        language: allLanguages[0].value
+      }));
+    }
+  }, [allLanguages]);
 
   // Reset form when modal opens
   useEffect(() => {
@@ -29,17 +47,18 @@ const NewSnippetModal = ({ isOpen, onClose, onSubmit, languages = [] }) => {
       setFormData({
         title: '',
         code: '',
-        language: allLanguages[0] || '',
+        language: allLanguages[0]?.value || '',
         tags: ''
       });
     }
-  }, [isOpen]); // Only run when isOpen changes
+  }, [isOpen, allLanguages]);
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   const handleSubmit = (e) => {
@@ -70,8 +89,9 @@ const NewSnippetModal = ({ isOpen, onClose, onSubmit, languages = [] }) => {
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                 required
+                placeholder="My Awesome Snippet"
               />
             </div>
 
@@ -83,11 +103,11 @@ const NewSnippetModal = ({ isOpen, onClose, onSubmit, languages = [] }) => {
                 name="language"
                 value={formData.language}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                 required
               >
-                {allLanguages.map(lang => (
-                  <option key={lang} value={lang}>{lang}</option>
+                {allLanguages.map(({ value, label }) => (
+                  <option key={value} value={value}>{label}</option>
                 ))}
               </select>
             </div>
@@ -101,8 +121,9 @@ const NewSnippetModal = ({ isOpen, onClose, onSubmit, languages = [] }) => {
                 value={formData.code}
                 onChange={handleChange}
                 rows={8}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg font-mono text-sm"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg font-mono text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                 required
+                placeholder="// Enter your code here..."
               />
             </div>
 
@@ -116,8 +137,11 @@ const NewSnippetModal = ({ isOpen, onClose, onSubmit, languages = [] }) => {
                 value={formData.tags}
                 onChange={handleChange}
                 placeholder="react, hooks, utility"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
               />
+              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                Separate multiple tags with commas
+              </p>
             </div>
           </div>
 
@@ -125,13 +149,13 @@ const NewSnippetModal = ({ isOpen, onClose, onSubmit, languages = [] }) => {
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg"
+              className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg"
+              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors"
             >
               Save Snippet
             </button>
