@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import api from '../utils/api';
+import { AuthContext } from '../context/AuthContext';
 
 const Register = () => {
   const [darkMode, setDarkMode] = useState(() => {
@@ -11,11 +12,17 @@ const Register = () => {
            (window.matchMedia('(prefers-color-scheme: dark)').matches && 
             localStorage.getItem('darkMode') !== 'false');
   });
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  });
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [passwordMatchError, setPasswordMatchError] = useState(false);
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', darkMode);
@@ -24,14 +31,47 @@ const Register = () => {
 
   const toggleDarkMode = () => setDarkMode(!darkMode);
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+
+    // Check password match in real-time
+    if (name === 'confirmPassword' || name === 'password') {
+      setPasswordMatchError(
+        name === 'password' 
+          ? value !== formData.confirmPassword 
+          : value !== formData.password
+      );
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (passwordMatchError) {
+      setError('Passwords do not match');
+      return;
+    }
+
+    setError('');
+    setIsLoading(true);
+
     try {
-      const { data } = await api.post('/auth/register', { name, email, password });
-      localStorage.setItem('token', data.token);
-      navigate('/');
+      const { data } = await api.post('/auth/register', {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password
+      });
+      
+      login(data.token); // Context API login
+      navigate('/dashboard');
     } catch (err) {
-      setError(err.response?.data?.msg || 'Registration failed');
+      setError(err.response?.data?.msg || 'Registration failed. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -43,6 +83,7 @@ const Register = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
           className="max-w-md mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden p-8"
         >
           <div className="text-center mb-8">
@@ -81,10 +122,12 @@ const Register = () => {
               </label>
               <input
                 type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
                 className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
                 required
+                autoComplete="name"
               />
             </div>
 
@@ -94,10 +137,12 @@ const Register = () => {
               </label>
               <input
                 type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
                 className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
                 required
+                autoComplete="email"
               />
             </div>
 
@@ -107,21 +152,51 @@ const Register = () => {
               </label>
               <input
                 type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                className={`w-full px-4 py-2 border ${
+                  passwordMatchError ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                } rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white`}
                 required
                 minLength="6"
+                autoComplete="new-password"
               />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Confirm Password
+              </label>
+              <input
+                type="password"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                className={`w-full px-4 py-2 border ${
+                  passwordMatchError ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                } rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white`}
+                required
+                minLength="6"
+                autoComplete="new-password"
+              />
+              {passwordMatchError && (
+                <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                  Passwords don't match
+                </p>
+              )}
             </div>
 
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               type="submit"
-              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-4 rounded-lg font-medium transition-colors shadow-md hover:shadow-indigo-500/20"
+              disabled={isLoading || passwordMatchError}
+              className={`w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-4 rounded-lg font-medium transition-colors shadow-md hover:shadow-indigo-500/20 ${
+                isLoading || passwordMatchError ? 'opacity-75 cursor-not-allowed' : ''
+              }`}
             >
-              Create Account
+              {isLoading ? 'Creating Account...' : 'Create Account'}
             </motion.button>
           </form>
 

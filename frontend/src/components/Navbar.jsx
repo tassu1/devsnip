@@ -1,10 +1,17 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FiSun, FiMoon, FiMenu, FiX } from 'react-icons/fi';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
 
 const Navbar = ({ darkMode, toggleDarkMode }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { isAuthenticated, logout } = useContext(AuthContext);
+
+  const handleLogout = () => {
+    logout();
+    setMobileMenuOpen(false); // Close mobile menu on logout
+  };
 
   return (
     <nav className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50">
@@ -25,8 +32,22 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
           <div className="hidden md:flex items-center gap-6">
             <NavLink to="/about">About</NavLink>
             <NavLink to="/features">Features</NavLink>
-            <NavLink to="/docs">Docs</NavLink>
             
+            {isAuthenticated ? (
+              <>
+                <NavLink to="/dashboard">Dashboard</NavLink>
+                <button 
+                  onClick={handleLogout}
+                  className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors font-medium"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <NavLink to="/login">Login</NavLink>
+            )}
+
+            {/* Dark Mode Toggle */}
             <motion.button
               whileTap={{ scale: 0.9 }}
               onClick={toggleDarkMode}
@@ -61,10 +82,25 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
             <MobileNavLink to="/features" onClick={() => setMobileMenuOpen(false)}>
               Features
             </MobileNavLink>
-            <MobileNavLink to="/docs" onClick={() => setMobileMenuOpen(false)}>
-              Documentation
-            </MobileNavLink>
             
+            {isAuthenticated ? (
+              <>
+                <MobileNavLink to="/dashboard" onClick={() => setMobileMenuOpen(false)}>
+                  Dashboard
+                </MobileNavLink>
+                <button
+                  onClick={handleLogout}
+                  className="block px-4 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-medium w-full text-left"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <MobileNavLink to="/login" onClick={() => setMobileMenuOpen(false)}>
+                Login
+              </MobileNavLink>
+            )}
+
             <div className="pt-2 border-t border-gray-200 dark:border-gray-800">
               <button
                 onClick={() => {
@@ -93,7 +129,7 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
   );
 };
 
-// Reusable NavLink component
+// Reusable NavLink component (unchanged)
 const NavLink = ({ to, children }) => (
   <motion.div whileHover={{ scale: 1.05 }}>
     <Link
@@ -105,7 +141,7 @@ const NavLink = ({ to, children }) => (
   </motion.div>
 );
 
-// Mobile-specific NavLink
+// Mobile-specific NavLink (unchanged)
 const MobileNavLink = ({ to, children, onClick }) => (
   <Link
     to={to}
