@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
+import SnippetDetail from './components/SnippetDetail'
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useContext(AuthContext);
@@ -33,6 +34,13 @@ function App() {
               </ProtectedRoute>
             } 
           />
+          <Route path="/snippets/:id"
+           element={
+            <ProtectedRoute>
+            <SnippetDetail/>
+            </ProtectedRoute>
+        } 
+        />
         </Routes>
       </Router>
     </AuthProvider>

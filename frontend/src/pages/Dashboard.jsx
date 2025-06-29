@@ -1,9 +1,10 @@
 import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import SnippetCard from '../components/SnippetCard';
+import SnippetCard from '../components/snippetcard';
 import SearchBar from '../components/SearchBar';
 import LanguageFilter from '../components/LanguageFilter';
 import NewSnippetModal from '../components/NewSnippet';
+import EditSnippetModal from '../components/EditSnippetModal';
 import { UserContext } from '../context/UserContext';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -29,6 +30,7 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [loadingCodes, setLoadingCodes] = useState({});
+  const [editingSnippet, setEditingSnippet] = useState(null);
 
   // Dark mode effect
   useEffect(() => {
@@ -149,6 +151,21 @@ const Dashboard = () => {
     }
   };
 
+
+  const handleEdit = async (updatedSnippet) => {
+  try {
+    const { data } = await api.patch(`/snippets/${updatedSnippet._id}`, updatedSnippet);
+    setSnippets(prev => prev.map(s => 
+      s._id === data._id ? { ...s, ...data } : s
+    ));
+    setEditingSnippet(null);
+    toast.success('Snippet updated successfully!');
+  } catch (err) {
+    console.error('Edit error:', err);
+    toast.error(err.response?.data?.msg || 'Failed to update snippet');
+  }
+};
+
   // Delete snippet
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this snippet?')) return;
@@ -177,6 +194,10 @@ const languages = [
     id: `${lang}-${Math.random().toString(36).substr(2, 9)}` 
   }))
 ].sort((a, b) => a.value.localeCompare(b.value));
+
+
+
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
       <Navbar 
@@ -230,14 +251,20 @@ const languages = [
         ) : filteredSnippets.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredSnippets.map(snippet => (
-              <SnippetCard 
+             <SnippetCard
                 key={snippet._id}
-                snippet={snippet}
-                onDelete={handleDelete}
-                onShowCode={() => fetchSnippetCode(snippet._id)}
-                isLoadingCode={loadingCodes[snippet._id]}
-                currentUserId={user?.id}
-              />
+                 snippet={snippet}
+                 onDelete={handleDelete}
+                 onUpdate={(updatedSnippet) => {
+   
+                setSnippets(prev => prev.map(s => 
+                  s._id === updatedSnippet._id ? updatedSnippet : s
+                  ));
+                  }}
+                 currentUserId={user?.id}
+           />
+
+
             ))}
           </div>
         ) : (
@@ -266,6 +293,8 @@ const languages = [
         onSubmit={handleCreate}
         languages={languages}
       />
+
+     
     </div>
   );
 };
