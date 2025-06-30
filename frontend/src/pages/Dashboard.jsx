@@ -4,7 +4,6 @@ import SnippetCard from '../components/snippetcard';
 import SearchBar from '../components/SearchBar';
 import LanguageFilter from '../components/LanguageFilter';
 import NewSnippetModal from '../components/NewSnippet';
-import EditSnippetModal from '../components/EditSnippetModal';
 import { UserContext } from '../context/UserContext';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
