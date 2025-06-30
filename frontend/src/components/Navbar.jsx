@@ -43,7 +43,7 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
             {isAuthenticated ? (
               <>
                 <NavLink to="/dashboard">Home</NavLink>
-                <NavLink to="/features">Features</NavLink>
+                <NavLink to="/useCases">Use Cases</NavLink>
                 <NavLink to="/about">About</NavLink>
                 <button 
                   onClick={handleLogout}
@@ -55,7 +55,7 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
             ) : (
               <>
                 <NavLink to="/">Home</NavLink>
-                <NavLink to="/features">Features</NavLink>
+                <NavLink to="/useCases">Use Cases</NavLink>
                 <NavLink to="/about">About</NavLink>
                 <NavLink to="/login">Login</NavLink>
               </>
@@ -95,8 +95,8 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
                 <MobileNavLink to="/dashboard" onClick={() => setMobileMenuOpen(false)}>
                   Home
                 </MobileNavLink>
-                <MobileNavLink to="/features" onClick={() => setMobileMenuOpen(false)}>
-                  Features
+                <MobileNavLink to="/useCases" onClick={() => setMobileMenuOpen(false)}>
+                  Use Cases
                 </MobileNavLink>
                 <MobileNavLink to="/about" onClick={() => setMobileMenuOpen(false)}>
                   About
@@ -113,8 +113,8 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
                 <MobileNavLink to="/" onClick={() => setMobileMenuOpen(false)}>
                   Home
                 </MobileNavLink>
-                <MobileNavLink to="/features" onClick={() => setMobileMenuOpen(false)}>
-                  Features
+                <MobileNavLink to="/useCases" onClick={() => setMobileMenuOpen(false)}>
+                   Use Cases
                 </MobileNavLink>
                 <MobileNavLink to="/about" onClick={() => setMobileMenuOpen(false)}>
                   About

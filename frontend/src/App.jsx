@@ -5,6 +5,8 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
+import UseCases from './pages/UseCase';
+import About from './pages/About';
 import SnippetDetail from './components/SnippetDetail'
 
 const ProtectedRoute = ({ children }) => {
@@ -26,6 +28,9 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/useCases" element={<UseCases />} />
+          <Route path="/about" element={<About />} />
+
           <Route 
             path="/dashboard" 
             element={
