@@ -79,14 +79,7 @@ const About = () => {
             A full-stack application solving a real developer pain point - organizing and retrieving code snippets efficiently.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-            <motion.button
-              whileHover={{ y: -2, boxShadow: "0 5px 15px rgba(79, 70, 229, 0.3)" }}
-              whileTap={{ scale: 0.98 }}
-              className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2"
-            >
-              <Link to="/register">Try Live Demo</Link>
-              <FiExternalLink />
-            </motion.button>
+           
             <motion.button
               whileHover={{ y: -2 }}
               whileTap={{ scale: 0.98 }}
@@ -350,7 +343,7 @@ const About = () => {
               whileTap={{ scale: 0.98 }}
               className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-all duration-200"
             >
-              <Link to="/contact" className="flex items-center justify-center gap-2">
+              <Link to="https://www.linkedin.com/in/md-tahseen-alam-892317263/" className="flex items-center justify-center gap-2">
                 Contact Me
               </Link>
             </motion.button>
@@ -360,7 +353,7 @@ const About = () => {
               className="px-6 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2"
             >
               <a 
-                href="https://github.com/yourusername" 
+                href="https://github.com/tassu1" 
                 target="_blank" 
                 rel="noopener noreferrer"
               >

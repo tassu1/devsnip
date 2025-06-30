@@ -1,11 +1,10 @@
-// Homepage.jsx
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
-const Homepage = () => {
+const Home = () => {
   const [darkMode, setDarkMode] = useState(() => {
     return localStorage.getItem('darkMode') === 'true' || 
            (window.matchMedia('(prefers-color-scheme: dark)').matches && 
@@ -108,13 +107,24 @@ const Homepage = () => {
               whileHover={{ scale: 1.02 }}
               className="order-1 lg:order-2 mockup-code bg-gray-800 text-gray-100 p-4 sm:p-6 rounded-lg shadow-xl"
             >
-              <pre data-prefix="$"><code>npm install codesnip</code></pre>
-             <pre data-prefix={'>'} className="text-emerald-400">
-  <code>// Save your first snippet</code>
-</pre>
-<pre data-prefix={'>'} className="text-yellow-400">
-  <code>const add = (a, b) ={'>'} a + b;</code>
-</pre>
+              <pre data-prefix="1"><code className="text-gray-400">// Custom React hook</code></pre>
+              <pre data-prefix="2"><code className="text-blue-400">import</code> <code className="text-gray-300">{`{ useState, useEffect }`}</code> <code className="text-blue-400">from</code> <code className="text-emerald-400">'react'</code><code className="text-gray-300">;</code></pre>
+              <pre data-prefix="3"><code className="text-gray-300"></code></pre>
+              <pre data-prefix="4"><code className="text-blue-400">export const</code> <code className="text-yellow-300">useDebounce</code> <code className="text-gray-300">= (value, delay) ={'>'} {`{`}</code></pre>
+              <pre data-prefix="5"><code className="text-blue-400">  const</code> <code className="text-gray-300">[debouncedValue, setDebouncedValue] =</code> <code className="text-yellow-300">useState</code><code className="text-gray-300">(value);</code></pre>
+              <pre data-prefix="6"><code className="text-gray-300"></code></pre>
+              <pre data-prefix="7"><code className="text-yellow-300">  useEffect</code><code className="text-gray-300">(() ={'>'} {`{`}</code></pre>
+              <pre data-prefix="8"><code className="text-blue-400">    const</code> <code className="text-gray-300">handler =</code> <code className="text-yellow-300">setTimeout</code><code className="text-gray-300">(() ={'>'} {`{`}</code></pre>
+              <pre data-prefix="9"><code className="text-yellow-300">      setDebouncedValue</code><code className="text-gray-300">(value);</code></pre>
+              <pre data-prefix="10"><code className="text-gray-300">    {`}`}, delay);</code></pre>
+              <pre data-prefix="11"><code className="text-gray-300"></code></pre>
+              <pre data-prefix="12"><code className="text-blue-400">    return</code> <code className="text-gray-300">() ={'>'} {`{`}</code></pre>
+              <pre data-prefix="13"><code className="text-yellow-300">      clearTimeout</code><code className="text-gray-300">(handler);</code></pre>
+              <pre data-prefix="14"><code className="text-gray-300">    {`}`};</code></pre>
+              <pre data-prefix="15"><code className="text-gray-300">  {`}`}, [value, delay]);</code></pre>
+              <pre data-prefix="16"><code className="text-gray-300"></code></pre>
+              <pre data-prefix="17"><code className="text-blue-400">  return</code> <code className="text-gray-300">debouncedValue;</code></pre>
+              <pre data-prefix="18"><code className="text-gray-300">{`}`}</code></pre>
             </motion.div>
           </div>
         </motion.section>
@@ -142,4 +152,4 @@ const FeatureItem = ({ icon, title, description }) => (
   </motion.div>
 );
 
-export default Homepage;
+export default Home
