@@ -35,8 +35,8 @@
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/tassu1/ai-assistant.git
-cd ai-assistant
+git clone https://github.com/tassu1/codesnip.git
+cd codesnip
 
 
 Backend Setup
