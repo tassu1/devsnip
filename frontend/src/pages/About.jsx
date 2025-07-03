@@ -2,13 +2,13 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { FiGithub, FiCode, FiCpu, FiDatabase, FiShare2, FiLock, FiSearch, FiExternalLink,FiCloud, FiZap , FiStar, FiImage } from 'react-icons/fi';
 import { FaReact, FaNodeJs } from 'react-icons/fa';
-import { SiMongodb, SiExpress, SiTailwindcss, SiTypescript } from 'react-icons/si';
+import { SiMongodb, SiExpress, SiTailwindcss, SiJavascript } from 'react-icons/si';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 const About = () => {
   const techStack = [
     { name: 'React', icon: <FaReact className="text-blue-500" />, color: 'text-blue-500' },
-    { name: 'TypeScript', icon: <SiTypescript className="text-blue-600" />, color: 'text-blue-600' },
+    { name: 'JavaScript', icon: <SiJavascript className="text-blue-600" />, color: 'text-blue-600' },
     { name: 'Node.js', icon: <FaNodeJs className="text-green-500" />, color: 'text-green-500' },
     { name: 'MongoDB', icon: <SiMongodb className="text-green-600" />, color: 'text-green-600' },
     { name: 'Express', icon: <SiExpress className="text-gray-800 dark:text-gray-200" />, color: 'text-gray-800 dark:text-gray-200' },
@@ -177,7 +177,7 @@ const About = () => {
               <ul className="space-y-3 text-gray-600 dark:text-gray-400">
                 <li className="flex items-start">
                   <span className="text-green-500 mr-2 mt-1">✓</span>
-                  <span>MERN stack with TypeScript for type safety</span>
+                  <span>MERN stack with JavaScript</span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-green-500 mr-2 mt-1">✓</span>
