@@ -12,13 +12,28 @@ const app = express();
 // Connect Database
 connectDB();
 
-// Middleware
+// CORS Configuration
+const allowedOrigins = [
+  'http://localhost:5173', // Local development
+  'https://codesnip-weld.vercel.app' // Your live Vercel frontend
+];
+
 app.use(cors({
-  origin: 'http://localhost:5173', // your frontend URL
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
-app.use(express.json());
 
+// Middleware
+app.use(express.json());
 
 // Routes
 app.use('/api/auth', auth);
