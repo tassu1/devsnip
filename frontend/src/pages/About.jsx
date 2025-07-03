@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { FiGithub, FiCode, FiCpu, FiDatabase, FiShare2, FiLock, FiSearch, FiExternalLink,FiCloud, FiZap , FiStar, FiImage } from 'react-icons/fi';
 import { FaReact, FaNodeJs } from 'react-icons/fa';
 import { SiMongodb, SiExpress, SiTailwindcss, SiJavascript } from 'react-icons/si';
-import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 const About = () => {
   const techStack = [
@@ -50,7 +49,7 @@ const About = () => {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-200">
-      <Navbar/>
+     
       {/* Hero Section */}
       <section className="relative py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="absolute inset-0 -z-10 overflow-hidden">

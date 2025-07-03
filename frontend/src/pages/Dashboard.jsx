@@ -5,7 +5,7 @@ import SearchBar from '../components/SearchBar';
 import LanguageFilter from '../components/LanguageFilter';
 import NewSnippetModal from '../components/NewSnippet';
 import { UserContext } from '../context/UserContext';
-import Navbar from '../components/Navbar';
+
 import Footer from '../components/Footer';
 import api from '../utils/api';
 import { toast } from 'react-toastify';
@@ -28,8 +28,7 @@ const Dashboard = () => {
   const [selectedLanguage, setSelectedLanguage] = useState('All');
   const [isLoading, setIsLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [loadingCodes, setLoadingCodes] = useState({});
-  const [editingSnippet, setEditingSnippet] = useState(null);
+  
 
   // Dark mode effect
   useEffect(() => {
@@ -65,22 +64,8 @@ const Dashboard = () => {
   }
 };
 
-  // Fetch code for specific snippet when expanded
-  const fetchSnippetCode = async (snippetId) => {
-    try {
-      setLoadingCodes(prev => ({ ...prev, [snippetId]: true }));
-      const { data } = await api.get(`/snippets/${snippetId}/code`);
-      
-      setSnippets(prev => prev.map(snippet => 
-        snippet._id === snippetId ? { ...snippet, code: data.code } : snippet
-      ));
-    } catch (err) {
-      console.error('Code load error:', err);
-      toast.error('Failed to load code content');
-    } finally {
-      setLoadingCodes(prev => ({ ...prev, [snippetId]: false }));
-    }
-  };
+  
+  
 
   // Initial data load
   useEffect(() => {
@@ -151,19 +136,7 @@ const Dashboard = () => {
   };
 
 
-  const handleEdit = async (updatedSnippet) => {
-  try {
-    const { data } = await api.patch(`/snippets/${updatedSnippet._id}`, updatedSnippet);
-    setSnippets(prev => prev.map(s => 
-      s._id === data._id ? { ...s, ...data } : s
-    ));
-    setEditingSnippet(null);
-    toast.success('Snippet updated successfully!');
-  } catch (err) {
-    console.error('Edit error:', err);
-    toast.error(err.response?.data?.msg || 'Failed to update snippet');
-  }
-};
+  
 
   // Delete snippet
   const handleDelete = async (id) => {
@@ -199,10 +172,7 @@ const languages = [
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
-      <Navbar 
-        darkMode={darkMode} 
-        toggleDarkMode={() => setDarkMode(!darkMode)} 
-      />
+    
 
       <main className="container mx-auto px-4 sm:px-6 py-8 md:py-12 lg:py-16 max-w-7xl">
         <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">

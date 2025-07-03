@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { FiCode, FiUsers, FiBook, FiZap, FiSearch, FiShare2, FiArrowRight } from 'react-icons/fi';
-import Navbar from '../components/Navbar';
+
 import Footer from '../components/Footer';
 
 const UseCases = () => {
@@ -59,7 +59,7 @@ const UseCases = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <Navbar/>
+
       {/* Hero */}
       <section className="py-20 px-4 text-center">
         <div className="max-w-3xl mx-auto">
