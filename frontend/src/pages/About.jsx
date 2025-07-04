@@ -85,7 +85,7 @@ const About = () => {
               className="px-6 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2"
             >
               <a 
-                href="https://github.com/yourusername/codesnip" 
+                href="https://github.com/yourusername/devsnip" 
                 target="_blank" 
                 rel="noopener noreferrer"
               >

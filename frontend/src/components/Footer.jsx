@@ -41,7 +41,7 @@ const Footer = () => {
 
           {/* Right Side - GitHub */}
           <a
-            href="https://github.com/tassu1/codesnip"
+            href="https://github.com/tassu1/devsnip"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center text-sm text-gray-600 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400 transition-colors"

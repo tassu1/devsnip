@@ -15,7 +15,7 @@ connectDB();
 // CORS Configuration
 const allowedOrigins = [
   'http://localhost:5173', // Local development
-  'https://codesnip-weld.vercel.app' // Your live Vercel frontend
+  'https://devsnipa.vercel.app' // Your live Vercel frontend
 ];
 
 app.use(cors({

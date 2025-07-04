@@ -1,6 +1,6 @@
-# CodeSnip ✂️
+# DevSnip ✂️
 
-**CodeSnip** is your personal code snippet manager — built for developers who hate losing great code. Store, organize, edit, and reuse your code snippets with ease.
+**DevSnip** is your personal code snippet manager — built for developers who hate losing great code. Store, organize, edit, and reuse your code snippets with ease.
 
 ---
 
@@ -35,8 +35,8 @@
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/tassu1/codesnip.git
-cd codesnip
+git clone https://github.com/tassu1/devsnip.git
+cd devsnip
 
 
 Backend Setup
