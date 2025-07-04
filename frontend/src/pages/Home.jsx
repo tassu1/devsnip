@@ -33,7 +33,7 @@ const Home = () => {
           >
             <span className="relative inline-block">
               <span className="relative z-10 text-indigo-600 dark:text-indigo-400">
-                &lt;/CodeSnip&gt;
+                &lt;/DevSnip&gt;
               </span>
               <span className="absolute inset-0 bg-indigo-400/20 dark:bg-indigo-600/20 blur-lg rounded-full opacity-70 -z-1" />
             </span>{' '}
@@ -83,7 +83,7 @@ const Home = () => {
                 <FeatureItem 
                   icon="💎" 
                   title="Syntax Highlighting" 
-                  description="Supports 100+ programming languages"
+                  description="Supports 30+ programming languages"
                 />
                 <FeatureItem 
                   icon="🏷️" 

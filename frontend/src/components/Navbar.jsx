@@ -34,7 +34,7 @@ const Navbar = () => { // Removed darkMode props
               className="text-xl md:text-2xl font-bold font-mono dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors"
               aria-label={isAuthenticated ? "Dashboard" : "Home"}
             >
-              &lt;/CodeSnip&gt;
+              &lt;/DevSnip&gt;
             </button>
           </motion.div>
 
