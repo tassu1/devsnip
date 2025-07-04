@@ -13,7 +13,7 @@ const Footer = () => {
           {/* Left Side - Branding */}
           <div className="flex items-center space-x-4">
             <span className="font-mono font-medium text-indigo-600 dark:text-indigo-400">
-              CodeSnip
+              DevSnip
             </span>
             <span className="text-xs text-gray-500 dark:text-gray-400">
               v1.0
@@ -53,7 +53,7 @@ const Footer = () => {
 
         {/* Copyright - Centered on mobile */}
         <div className="mt-4 text-center text-xs text-gray-500 dark:text-gray-500">
-          © {currentYear} CodeSnip. The developer's snippet manager.
+          © {currentYear} DevSnip. The developer's snippet manager.
         </div>
       </div>
     </footer>

@@ -67,7 +67,7 @@ const UseCases = () => {
             Optimize Your Developer Workflow
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300">
-            How top engineers use CodeSnip to work smarter
+            How top engineers use DevSnip to work smarter
           </p>
         </div>
       </section>

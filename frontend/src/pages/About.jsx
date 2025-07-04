@@ -72,7 +72,7 @@ const About = () => {
             <FiStar className="mr-2" /> Showcase Project
           </motion.span>
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
-            CodeSnip: <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Developer Productivity</span> Tool
+            DevSnip: <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Developer Productivity</span> Tool
           </h1>
           <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             A full-stack application solving a real developer pain point - organizing and retrieving code snippets efficiently.
@@ -171,7 +171,7 @@ const About = () => {
               </div>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Technical Solution</h2>
               <p className="text-gray-600 dark:text-gray-300 mb-4">
-                CodeSnip implements a modern full-stack solution with these technical highlights:
+                DevSnip implements a modern full-stack solution with these technical highlights:
               </p>
               <ul className="space-y-3 text-gray-600 dark:text-gray-400">
                 <li className="flex items-start">
@@ -305,7 +305,7 @@ const About = () => {
                 </div>
                 <div className="flex justify-between items-center">
                   <div>
-                    <h3 className="font-medium text-gray-900 dark:text-white">CodeSnip Dashboard</h3>
+                    <h3 className="font-medium text-gray-900 dark:text-white">DevSnip Dashboard</h3>
                     <p className="text-gray-500 dark:text-gray-400 text-sm">Main interface screenshot</p>
                   </div>
                   <button className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300">
