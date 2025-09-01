@@ -9,13 +9,13 @@ const snippets = require('./routes/snippetRoutes');
 
 const app = express();
 
-// Connect Database
+
 connectDB();
 
-// CORS Configuration
+
 const allowedOrigins = [
-  'http://localhost:5173', // Local development
-  'https://devsnipa.vercel.app' // Your live Vercel frontend
+  'http://localhost:5173', 
+  'https://devsnipa.vercel.app' 
 ];
 
 app.use(cors({
