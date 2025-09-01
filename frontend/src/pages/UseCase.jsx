@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { FiCode, FiUsers, FiBook, FiZap, FiSearch, FiShare2, FiArrowRight } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
 
 import Footer from '../components/Footer';
 
@@ -210,9 +211,12 @@ const UseCases = () => {
             <p className="text-indigo-100 mb-6 max-w-lg mx-auto">
               Join developers who save hours every week with organized code snippets
             </p>
-            <button className="px-6 py-3 bg-white text-indigo-600 rounded-lg font-medium flex items-center gap-2 mx-auto">
-              Get Started <FiArrowRight />
-            </button>
+            <Link
+                          to="/login"
+                          className="inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 sm:px-8 sm:py-3 rounded-lg text-base sm:text-lg font-medium transition-colors shadow-md hover:shadow-indigo-500/20"
+                        >
+                          Get Started
+                        </Link>
           </div>
         </div>
       </div>
